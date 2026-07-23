@@ -2,7 +2,16 @@ import { useMemo, useState, useEffect } from "react";
 import { useAcademy, setTheme } from "@/lib/academy-store";
 import { CLASSES, computeReport, PILLARS } from "@/lib/academy-types";
 import { Card } from "@/components/ui/card";
-import { Trophy, Users, CalendarCheck, Activity, Settings, Moon, Sun } from "lucide-react";
+import {
+  Trophy,
+  Users,
+  CalendarCheck,
+  Activity,
+  Settings,
+  Moon,
+  Sun,
+  CalendarDays,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import type { Tab } from "./BottomNav";
@@ -87,6 +96,7 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
         <QuickCard icon={Activity} label="Sesi Harian" onClick={() => onGo("assess")} />
         <QuickCard icon={CalendarCheck} label="Data Coach" onClick={() => onGo("coaches")} />
         <QuickCard icon={Trophy} label="Rapor" onClick={() => onGo("report")} />
+        <QuickCard icon={CalendarDays} label="Jadwal" onClick={() => onGo("schedule")} />
       </section>
 
       <section>

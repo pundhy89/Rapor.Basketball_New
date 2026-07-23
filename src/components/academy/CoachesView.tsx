@@ -24,7 +24,7 @@ import {
 import { toast } from "sonner";
 
 export function CoachesView({ onBack }: { onBack?: () => void }) {
-  const { coaches, assessments, attendance } = useAcademy();
+  const { coaches, assessments, attendance, logoUrl } = useAcademy();
   const [open, setOpen] = useState(false);
   const [editingCoach, setEditingCoach] = useState<Coach | undefined>(undefined);
 
@@ -72,6 +72,15 @@ export function CoachesView({ onBack }: { onBack?: () => void }) {
             >
               <div className="absolute top-0 left-0 w-32 h-32 bg-orange-500 rounded-br-[100px] -translate-x-8 -translate-y-8 opacity-10 pointer-events-none" />
               <div className="absolute bottom-0 right-0 w-40 h-40 bg-orange-500 rounded-tl-[100px] translate-x-12 translate-y-12 opacity-10 pointer-events-none" />
+              {logoUrl && (
+                <div className="absolute left-4 top-4 z-10 w-12 h-12">
+                  <img
+                    src={logoUrl}
+                    alt="Logo"
+                    className="w-full h-full object-contain drop-shadow-sm grayscale contrast-125 brightness-110"
+                  />
+                </div>
+              )}
 
               <div className="relative p-6 flex flex-col items-center border-b">
                 <div className="absolute right-3 top-3 flex gap-2">

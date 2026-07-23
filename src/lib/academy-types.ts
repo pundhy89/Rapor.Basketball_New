@@ -81,6 +81,16 @@ export interface AttendanceRecord {
   reason?: string;
 }
 
+export interface Schedule {
+  id: string;
+  classes: ClassLevel[];
+  days: string[];
+  startTime: string; // e.g. "15:30"
+  endTime: string; // e.g. "17:00"
+  location: string;
+  createdAt: string;
+}
+
 export interface StudentReport {
   studentId: string;
   pillarAverages: Record<PillarKey, number>;

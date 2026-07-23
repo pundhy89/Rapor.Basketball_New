@@ -4,6 +4,7 @@ import type {
   AttendanceRecord,
   AttendanceStatus,
   Coach,
+  Schedule,
   Student,
 } from "./academy-types";
 
@@ -11,6 +12,7 @@ const KEY = "hoop-academy-v2";
 const GAS_KEY = "hoop-academy-gas-url";
 
 export interface AcademyState {
+  schedules: Schedule[];
   students: Student[];
   coaches: Coach[];
   assessments: Assessment[];
@@ -26,6 +28,7 @@ function today(offsetDays = 0) {
 }
 
 const initial: AcademyState = {
+  schedules: [],
   students: [
     {
       id: "s1",
@@ -176,7 +179,7 @@ export function deleteStudent(id: string) {
 }
 
 // ---------- Coach ----------
-export function addCoach(c: Omit<Coach, "id" | "createdAt">) {
+export function addCoach(c: Omit<Coach, Schedule, "id" | "createdAt">) {
   state = {
     ...state,
     coaches: [
@@ -186,7 +189,7 @@ export function addCoach(c: Omit<Coach, "id" | "createdAt">) {
   };
   persist();
 }
-export function updateCoach(id: string, c: Partial<Omit<Coach, "id" | "createdAt">>) {
+export function updateCoach(id: string, c: Partial<Omit<Coach, Schedule, "id" | "createdAt">>) {
   state = {
     ...state,
     coaches: state.coaches.map((coach) => (coach.id === id ? { ...coach, ...c } : coach)),
@@ -195,6 +198,30 @@ export function updateCoach(id: string, c: Partial<Omit<Coach, "id" | "createdAt
 }
 export function deleteCoach(id: string) {
   state = { ...state, coaches: state.coaches.filter((c) => c.id !== id) };
+  persist();
+}
+
+// ---------- Schedule ----------
+export function addSchedule(payload: Omit<Schedule, "id" | "createdAt">) {
+  const s: Schedule = {
+    ...payload,
+    id: Math.random().toString(36).substring(7),
+    createdAt: new Date().toISOString(),
+  };
+  state = { ...state, schedules: [...state.schedules, s] };
+  persist();
+}
+
+export function updateSchedule(id: string, payload: Partial<Schedule>) {
+  state = {
+    ...state,
+    schedules: state.schedules.map((s) => (s.id === id ? { ...s, ...payload } : s)),
+  };
+  persist();
+}
+
+export function deleteSchedule(id: string) {
+  state = { ...state, schedules: state.schedules.filter((s) => s.id !== id) };
   persist();
 }
 

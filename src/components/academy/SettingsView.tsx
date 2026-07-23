@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react";
-import { getGasUrl, pullFromGas, setGasUrl, setLogoUrl, useAcademy } from "@/lib/academy-store";
+import { getGasUrl, pullFromGas, setGasUrl } from "@/lib/academy-store";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { ChevronLeft, Cloud, CloudDownload, Copy, ImagePlus, Trash2 } from "lucide-react";
+import { ChevronLeft, Cloud, CloudDownload, Copy } from "lucide-react";
 
 const GAS_SCRIPT = `// === Google Apps Script — Hoop Academy Sync ===
 // 1. Buka https://script.google.com  → New project
@@ -67,28 +67,7 @@ function readSheet_(ss, name) {
 
 export function SettingsView({ onBack }: { onBack?: () => void }) {
   const [url, setUrl] = useState("");
-  const { logoUrl } = useAcademy();
-  const fileRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => setUrl(getGasUrl()), []);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error("Ukuran file maksimal 2MB");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64 = event.target?.result as string;
-      setLogoUrl(base64);
-      toast.success("Logo berhasil diperbarui");
-    };
-    reader.readAsDataURL(file);
-  };
 
   return (
     <div className="space-y-4">
@@ -108,55 +87,6 @@ export function SettingsView({ onBack }: { onBack?: () => void }) {
           <p className="text-xs text-muted-foreground">Konfigurasi Aplikasi</p>
         </div>
       </header>
-
-      <Card className="p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-primary/10 text-primary">
-            <ImagePlus className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-sm font-bold">Logo Akademi</p>
-            <p className="text-[11px] text-muted-foreground">Tampil di dashboard utama</p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="h-16 w-16 shrink-0 rounded-lg border border-border bg-muted overflow-hidden flex items-center justify-center">
-            {logoUrl ? (
-              <img src={logoUrl} alt="Logo" className="h-full w-full object-contain" />
-            ) : (
-              <span className="text-[10px] text-muted-foreground">Kosong</span>
-            )}
-          </div>
-          <div className="space-y-2 flex-1">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              ref={fileRef}
-              onChange={handleFileChange}
-            />
-            <Button
-              size="sm"
-              variant="secondary"
-              className="w-full"
-              onClick={() => fileRef.current?.click()}
-            >
-              Pilih Gambar
-            </Button>
-            {logoUrl && (
-              <Button
-                size="sm"
-                variant="ghost"
-                className="w-full text-destructive"
-                onClick={() => setLogoUrl("")}
-              >
-                <Trash2 className="w-3 h-3 mr-1" /> Hapus
-              </Button>
-            )}
-          </div>
-        </div>
-      </Card>
 
       <Card className="space-y-3 p-4">
         <div className="flex items-center gap-2">

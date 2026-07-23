@@ -237,8 +237,12 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                               <IdCard className="h-3 w-3" />
                             </div>
                             <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">NIS</p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">{student.nis || "DRB-0000"}</p>
+                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                NIS
+                              </p>
+                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                                {student.nis || "DRB-0000"}
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 border border-white/20 rounded-full bg-white/5 p-1.5">
@@ -246,8 +250,14 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                               <User className="h-3 w-3" />
                             </div>
                             <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">Usia</p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">{student.birthDate ? `${new Date().getFullYear() - new Date(student.birthDate).getFullYear()} Tahun` : "-"}</p>
+                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                Usia
+                              </p>
+                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                                {student.birthDate
+                                  ? `${new Date().getFullYear() - new Date(student.birthDate).getFullYear()} Tahun`
+                                  : "-"}
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 border border-white/20 rounded-full bg-white/5 p-1.5">
@@ -255,8 +265,12 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                               <LayoutGrid className="h-3 w-3" />
                             </div>
                             <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">Kelas</p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">{student.className}</p>
+                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                Kelas
+                              </p>
+                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                                {student.className}
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 border border-white/20 rounded-full bg-white/5 p-1.5">
@@ -264,8 +278,12 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                               <Calendar className="h-3 w-3" />
                             </div>
                             <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">Tahun/Semester</p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">24/25 - SEM 1</p>
+                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                Tahun/Semester
+                              </p>
+                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                                24/25 - SEM 1
+                              </p>
                             </div>
                           </div>
                         </div>
@@ -289,10 +307,10 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                   <h3 className="text-[15px] font-black text-slate-900 tracking-wider uppercase mb-5">
                     5 PILAR PERFORMA
                   </h3>
-                  
+
                   {/* Faint basketball hoop watermark on the right */}
                   <div className="absolute right-0 top-10 bottom-0 w-32 opacity-[0.03] pointer-events-none flex items-center justify-end overflow-hidden">
-                     <Dribbble className="w-48 h-48 translate-x-12" />
+                    <Dribbble className="w-48 h-48 translate-x-12" />
                   </div>
 
                   <div className="space-y-4 relative z-10">
@@ -300,20 +318,18 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                       const val = report.pillarAverages[p.key];
                       return (
                         <div key={p.key} className="flex items-center gap-4">
-                          <div className="shrink-0 text-[#d97706]">
-                            {getPillarIcon(p.key)}
-                          </div>
+                          <div className="shrink-0 text-[#d97706]">{getPillarIcon(p.key)}</div>
                           <div className="flex-1 min-w-0 flex flex-col justify-center">
                             <span className="font-bold text-slate-800 text-[12px] truncate mb-1.5">
                               {p.label}
                             </span>
                             <div className="flex items-center">
-                               <div className="h-1.5 overflow-hidden bg-slate-200 w-full">
-                                 <div
-                                   className="h-full bg-[#ea580c]"
-                                   style={{ width: `${Math.min(100, val)}%` }}
-                                 />
-                               </div>
+                              <div className="h-1.5 overflow-hidden bg-slate-200 w-full">
+                                <div
+                                  className="h-full bg-[#ea580c]"
+                                  style={{ width: `${Math.min(100, val)}%` }}
+                                />
+                              </div>
                             </div>
                           </div>
                           <div className="shrink-0 w-12 text-right">
@@ -341,28 +357,12 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                   <h3 className="text-[15px] font-black text-slate-900 tracking-wider uppercase mb-5">
                     RINGKASAN KEHADIRAN
                   </h3>
-                  
+
                   <div className="grid grid-cols-4 gap-3">
-                    <AttCard
-                      label="Hadir"
-                      value={report.presentCount}
-                      color="text-[#10b981]"
-                    />
-                    <AttCard
-                      label="Izin"
-                      value={report.izinCount}
-                      color="text-[#eab308]"
-                    />
-                    <AttCard
-                      label="Sakit"
-                      value={report.sakitCount}
-                      color="text-[#ef4444]"
-                    />
-                    <AttCard
-                      label="Alpha"
-                      value={report.alphaCount}
-                      color="text-[#9f1239]"
-                    />
+                    <AttCard label="Hadir" value={report.presentCount} color="text-[#10b981]" />
+                    <AttCard label="Izin" value={report.izinCount} color="text-[#eab308]" />
+                    <AttCard label="Sakit" value={report.sakitCount} color="text-[#ef4444]" />
+                    <AttCard label="Alpha" value={report.alphaCount} color="text-[#9f1239]" />
                   </div>
 
                   <div className="mt-5 text-center">
@@ -415,15 +415,7 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
   );
 }
 
-function AttCard({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color: string;
-}) {
+function AttCard({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div className="rounded-[16px] border-[2px] border-slate-900 bg-white py-3 flex flex-col items-center justify-center text-center shadow-sm">
       <p className="text-[34px] font-black leading-none text-slate-900 mt-1">{value}</p>

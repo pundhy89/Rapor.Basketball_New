@@ -8,6 +8,7 @@ import { AssessView } from "@/components/academy/AssessView";
 import { CoachesView } from "@/components/academy/CoachesView";
 import { ReportView } from "@/components/academy/ReportView";
 import { CurriculumView } from "@/components/academy/CurriculumView";
+import { ScheduleView } from "@/components/academy/ScheduleView";
 import { SettingsView } from "@/components/academy/SettingsView";
 import { useAcademy } from "@/lib/academy-store";
 
@@ -54,6 +55,7 @@ function App() {
         {tab === "coaches" && <CoachesView onBack={() => setTab("dashboard")} />}
         {tab === "report" && <ReportView onBack={() => setTab("dashboard")} />}
         {tab === "curriculum" && <CurriculumView onBack={() => setTab("dashboard")} />}
+        {tab === "schedule" && <ScheduleView onBack={() => setTab("dashboard")} />}
         {tab === "settings" && <SettingsView onBack={() => setTab("dashboard")} />}
       </main>
       <BottomNav active={tab} onChange={setTab} />

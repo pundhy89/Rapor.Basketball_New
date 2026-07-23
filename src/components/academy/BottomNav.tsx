@@ -10,7 +10,14 @@ import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 
 export type Tab =
-  "dashboard" | "students" | "assess" | "coaches" | "report" | "curriculum" | "settings";
+  | "dashboard"
+  | "students"
+  | "assess"
+  | "coaches"
+  | "report"
+  | "curriculum"
+  | "settings"
+  | "schedule";
 
 const tabs: {
   id: Tab;
