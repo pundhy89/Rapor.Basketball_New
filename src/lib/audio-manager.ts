@@ -51,10 +51,10 @@ class AudioManager {
       this.bgmFiles = files;
     } else {
       // Seed default track using external URL to avoid CORS on fetch
-      const newFile = { 
-        id: "default-1", 
-        name: "Lofi Beats (Default)", 
-        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
+      const newFile = {
+        id: "default-1",
+        name: "Lofi Beats (Default)",
+        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
       };
       this.bgmFiles = [newFile];
     }
@@ -125,7 +125,7 @@ class AudioManager {
     if (this.bgmFiles.length === 0) return;
     this.currentBgmIndex = index;
     const file = this.bgmFiles[this.currentBgmIndex];
-    
+
     if (this.bgmAudio.src && this.bgmAudio.src.startsWith("blob:")) {
       URL.revokeObjectURL(this.bgmAudio.src);
     }
@@ -136,7 +136,7 @@ class AudioManager {
     } else if (file.url) {
       this.bgmAudio.src = file.url;
     }
-    
+
     this.bgmAudio.play().catch((e) => console.warn("Autoplay prevented", e));
     this.notify();
   }

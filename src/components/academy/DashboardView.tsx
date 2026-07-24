@@ -24,8 +24,16 @@ import { cn } from "@/lib/utils";
 import type { Tab } from "./BottomNav";
 
 export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
-  const isPlaying = useSyncExternalStore((l) => audioManager.subscribe(l), () => audioManager.getIsPlaying(), () => false);
-  const trackName = useSyncExternalStore((l) => audioManager.subscribe(l), () => audioManager.getCurrentTrackName(), () => "");
+  const isPlaying = useSyncExternalStore(
+    (l) => audioManager.subscribe(l),
+    () => audioManager.getIsPlaying(),
+    () => false,
+  );
+  const trackName = useSyncExternalStore(
+    (l) => audioManager.subscribe(l),
+    () => audioManager.getCurrentTrackName(),
+    () => "",
+  );
   const { students, assessments, attendance, logoUrl, theme } = useAcademy();
   const today = new Date().toISOString().slice(0, 10);
 
@@ -53,7 +61,7 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
 
   return (
     <div className="space-y-5 pt-16 relative">
-            {/* Top action buttons */}
+      {/* Top action buttons */}
       <div className="absolute top-2 left-0 z-50">
         <button
           onClick={() => onGo("settings")}
@@ -109,7 +117,6 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
         <QuickCard icon={CalendarDays} label="Jadwal" onClick={() => onGo("schedule")} />
       </section>
 
-      
       {/* Music Player widget */}
       <section>
         <Card className="p-3 mb-3 bg-secondary/50 border flex items-center justify-between">
@@ -118,16 +125,35 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
               <Music className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">BGM Player</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                BGM Player
+              </p>
               <p className="truncate text-sm font-semibold">{trackName || "Loading..."}</p>
             </div>
           </div>
           <div className="flex items-center gap-1 shrink-0 ml-2">
-            <button onClick={() => audioManager.playPrev()} className="p-2 hover:bg-accent rounded-full transition-colors"><SkipBack className="h-4 w-4" /></button>
-            <button onClick={() => audioManager.togglePlay()} className="p-2 hover:bg-accent rounded-full bg-primary/10 text-primary transition-colors">
-              {isPlaying ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current" />}
+            <button
+              onClick={() => audioManager.playPrev()}
+              className="p-2 hover:bg-accent rounded-full transition-colors"
+            >
+              <SkipBack className="h-4 w-4" />
             </button>
-            <button onClick={() => audioManager.playNext()} className="p-2 hover:bg-accent rounded-full transition-colors"><SkipForward className="h-4 w-4" /></button>
+            <button
+              onClick={() => audioManager.togglePlay()}
+              className="p-2 hover:bg-accent rounded-full bg-primary/10 text-primary transition-colors"
+            >
+              {isPlaying ? (
+                <Pause className="h-4 w-4 fill-current" />
+              ) : (
+                <Play className="h-4 w-4 fill-current" />
+              )}
+            </button>
+            <button
+              onClick={() => audioManager.playNext()}
+              className="p-2 hover:bg-accent rounded-full transition-colors"
+            >
+              <SkipForward className="h-4 w-4" />
+            </button>
           </div>
         </Card>
       </section>
