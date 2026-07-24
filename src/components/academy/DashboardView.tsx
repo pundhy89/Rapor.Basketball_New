@@ -1,5 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useAcademy, setTheme } from "@/lib/academy-store";
+import { audioManager } from "@/lib/audio-manager";
+import { useSyncExternalStore } from "react";
 import { CLASSES, computeReport, PILLARS } from "@/lib/academy-types";
 import { Card } from "@/components/ui/card";
 import {
@@ -11,12 +13,19 @@ import {
   Moon,
   Sun,
   CalendarDays,
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Music,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import type { Tab } from "./BottomNav";
 
 export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
+  const isPlaying = useSyncExternalStore((l) => audioManager.subscribe(l), () => audioManager.getIsPlaying(), () => false);
+  const trackName = useSyncExternalStore((l) => audioManager.subscribe(l), () => audioManager.getCurrentTrackName(), () => "");
   const { students, assessments, attendance, logoUrl, theme } = useAcademy();
   const today = new Date().toISOString().slice(0, 10);
 
@@ -45,15 +54,7 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
   return (
     <div className="space-y-5 pt-16 relative">
       {/* Top action buttons */}
-      <div className="absolute top-2 left-0 z-50">
-        <button
-          onClick={() => onGo("settings")}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card shadow-sm transition-colors hover:bg-accent"
-          aria-label="Settings"
-        >
-          <Settings className="h-5 w-5 text-foreground" />
-        </button>
-      </div>
+
       <div className="absolute top-2 right-0 z-50">
         <button
           onClick={toggleDark}
@@ -97,6 +98,29 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
         <QuickCard icon={CalendarCheck} label="Data Coach" onClick={() => onGo("coaches")} />
         <QuickCard icon={Trophy} label="Rapor" onClick={() => onGo("report")} />
         <QuickCard icon={CalendarDays} label="Jadwal" onClick={() => onGo("schedule")} />
+      </section>
+
+      
+      {/* Music Player widget */}
+      <section>
+        <Card className="p-3 mb-3 bg-secondary/50 border flex items-center justify-between">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+              <Music className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">BGM Player</p>
+              <p className="truncate text-sm font-semibold">{trackName || "Loading..."}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 shrink-0 ml-2">
+            <button onClick={() => audioManager.playPrev()} className="p-2 hover:bg-accent rounded-full transition-colors"><SkipBack className="h-4 w-4" /></button>
+            <button onClick={() => audioManager.togglePlay()} className="p-2 hover:bg-accent rounded-full bg-primary/10 text-primary transition-colors">
+              {isPlaying ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current" />}
+            </button>
+            <button onClick={() => audioManager.playNext()} className="p-2 hover:bg-accent rounded-full transition-colors"><SkipForward className="h-4 w-4" /></button>
+          </div>
+        </Card>
       </section>
 
       <section>

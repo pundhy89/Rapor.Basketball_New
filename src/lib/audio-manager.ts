@@ -9,7 +9,7 @@ export interface BGMFile {
 class AudioManager {
   private bgmAudio!: HTMLAudioElement;
   private clickAudio!: HTMLAudioElement;
-  private isBgmEnabled = false;
+  private isBgmEnabled = true;
   private bgmFiles: BGMFile[] = [];
   private currentBgmIndex = -1;
   private listeners: Set<() => void> = new Set();
@@ -20,13 +20,15 @@ class AudioManager {
       this.bgmAudio = new Audio();
       this.bgmAudio.loop = false;
       this.bgmAudio.volume = 0.5;
-      
+
       this.clickAudio = new Audio();
-      
+
+      this.bgmAudio.addEventListener("play", () => this.notify());
+      this.bgmAudio.addEventListener("pause", () => this.notify());
       this.bgmAudio.addEventListener("ended", () => {
         this.playRandomBgm();
       });
-      
+
       this.init();
     }
   }
@@ -44,8 +46,20 @@ class AudioManager {
     }
 
     const files = await get("bgm_files");
-    if (files && Array.isArray(files)) {
+    if (files && Array.isArray(files) && files.length > 0) {
       this.bgmFiles = files;
+    } else {
+      // Seed default track if empty
+      try {
+        const defaultTrackUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+        const response = await fetch(defaultTrackUrl);
+        const buffer = await response.arrayBuffer();
+        const newFile = { id: crypto.randomUUID(), name: "Default BGM Track 1", buffer };
+        this.bgmFiles = [newFile];
+        await set("bgm_files", this.bgmFiles);
+      } catch (e) {
+        console.warn("Failed to seed default audio", e);
+      }
     }
 
     this.notify();
@@ -103,24 +117,62 @@ class AudioManager {
   playRandomBgm() {
     if (this.bgmFiles.length === 0) return;
     if (!this.isBgmEnabled) return;
-
-    // Pick a random track different from current if possible
     let nextIndex = Math.floor(Math.random() * this.bgmFiles.length);
     if (this.bgmFiles.length > 1 && nextIndex === this.currentBgmIndex) {
       nextIndex = (nextIndex + 1) % this.bgmFiles.length;
     }
+    this.playIndex(nextIndex);
+  }
 
-    this.currentBgmIndex = nextIndex;
+  playIndex(index: number) {
+    if (this.bgmFiles.length === 0) return;
+    this.currentBgmIndex = index;
     const file = this.bgmFiles[this.currentBgmIndex];
-
-    const blob = new Blob([file.buffer], { type: "audio/mpeg" }); // assume mp3/m4a
+    const blob = new Blob([file.buffer], { type: "audio/mpeg" });
     const url = URL.createObjectURL(blob);
-
-    if (this.bgmAudio.src && this.bgmAudio.src.startsWith('blob:')) {
+    if (this.bgmAudio.src && this.bgmAudio.src.startsWith("blob:")) {
       URL.revokeObjectURL(this.bgmAudio.src);
     }
     this.bgmAudio.src = url;
     this.bgmAudio.play().catch((e) => console.warn("Autoplay prevented", e));
+    this.notify();
+  }
+
+  playNext() {
+    if (this.bgmFiles.length === 0) return;
+    const nextIndex = (this.currentBgmIndex + 1) % this.bgmFiles.length;
+    this.playIndex(nextIndex);
+  }
+
+  playPrev() {
+    if (this.bgmFiles.length === 0) return;
+    const prevIndex = (this.currentBgmIndex - 1 + this.bgmFiles.length) % this.bgmFiles.length;
+    this.playIndex(prevIndex);
+  }
+
+  togglePlay() {
+    if (this.bgmFiles.length === 0) return;
+    if (this.bgmAudio.paused) {
+      if (!this.bgmAudio.src) {
+        this.playRandomBgm();
+      } else {
+        this.bgmAudio.play().catch(() => {});
+      }
+    } else {
+      this.bgmAudio.pause();
+    }
+    this.notify();
+  }
+
+  getIsPlaying() {
+    return this.bgmAudio ? !this.bgmAudio.paused : false;
+  }
+
+  getCurrentTrackName() {
+    if (this.currentBgmIndex >= 0 && this.currentBgmIndex < this.bgmFiles.length) {
+      return this.bgmFiles[this.currentBgmIndex].name;
+    }
+    return "";
   }
 
   setBgmEnabled(enabled: boolean) {
