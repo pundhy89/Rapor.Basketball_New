@@ -3,7 +3,8 @@ import { get, set } from "idb-keyval";
 export interface BGMFile {
   id: string;
   name: string;
-  buffer: ArrayBuffer;
+  buffer?: ArrayBuffer;
+  url?: string;
 }
 
 class AudioManager {
@@ -49,17 +50,13 @@ class AudioManager {
     if (files && Array.isArray(files) && files.length > 0) {
       this.bgmFiles = files;
     } else {
-      // Seed default track if empty
-      try {
-        const defaultTrackUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-        const response = await fetch(defaultTrackUrl);
-        const buffer = await response.arrayBuffer();
-        const newFile = { id: crypto.randomUUID(), name: "Default BGM Track 1", buffer };
-        this.bgmFiles = [newFile];
-        await set("bgm_files", this.bgmFiles);
-      } catch (e) {
-        console.warn("Failed to seed default audio", e);
-      }
+      // Seed default track using external URL to avoid CORS on fetch
+      const newFile = { 
+        id: "default-1", 
+        name: "Lofi Beats (Default)", 
+        url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
+      };
+      this.bgmFiles = [newFile];
     }
 
     this.notify();
@@ -128,12 +125,18 @@ class AudioManager {
     if (this.bgmFiles.length === 0) return;
     this.currentBgmIndex = index;
     const file = this.bgmFiles[this.currentBgmIndex];
-    const blob = new Blob([file.buffer], { type: "audio/mpeg" });
-    const url = URL.createObjectURL(blob);
+    
     if (this.bgmAudio.src && this.bgmAudio.src.startsWith("blob:")) {
       URL.revokeObjectURL(this.bgmAudio.src);
     }
-    this.bgmAudio.src = url;
+
+    if (file.buffer) {
+      const blob = new Blob([file.buffer], { type: "audio/mpeg" });
+      this.bgmAudio.src = URL.createObjectURL(blob);
+    } else if (file.url) {
+      this.bgmAudio.src = file.url;
+    }
+    
     this.bgmAudio.play().catch((e) => console.warn("Autoplay prevented", e));
     this.notify();
   }
