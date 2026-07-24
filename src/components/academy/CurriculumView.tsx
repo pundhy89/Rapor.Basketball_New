@@ -489,7 +489,7 @@ export function CurriculumView({ onBack }: { onBack?: () => void }) {
       {/* Pathway Hero */}
       <section className="relative overflow-hidden rounded-3xl bg-court-gradient p-6 text-primary-foreground shadow-lg">
         <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
-        <div className="relative">
+        <div className="relative flex flex-col items-center text-center">
           <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest backdrop-blur border border-transparent dark:border-white">
             <GraduationCap className="h-3 w-3" /> Development Pathway
           </span>
@@ -572,7 +572,7 @@ export function CurriculumView({ onBack }: { onBack?: () => void }) {
       {/* Hero Scoring */}
       <section className="relative overflow-hidden rounded-3xl bg-hero-gradient p-6 text-primary-foreground shadow-lg">
         <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-        <div className="relative">
+        <div className="relative flex flex-col items-center text-center">
           <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest backdrop-blur">
             <Sparkles className="h-3 w-3" /> Penilaian
           </span>

@@ -154,10 +154,10 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
           </div>
 
           {/* Rapor Canvas Wrapper */}
-          <div className="w-full flex justify-center pb-8 overflow-x-auto">
+          <div className="w-full flex justify-center pb-8 px-2 sm:px-0">
             <div
               ref={reportRef}
-              className="w-[420px] shrink-0 bg-white relative overflow-hidden rounded-xl border shadow-sm mx-auto"
+              className="w-full max-w-[420px] shrink-0 bg-white relative origin-top scale-[0.85] sm:scale-100 sm:scale-100 transition-transform overflow-hidden rounded-xl border shadow-sm mx-auto"
               style={{ fontFamily: "Inter, sans-serif" }}
             >
               {/* Header Art */}
@@ -186,11 +186,11 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                 <div className="relative rounded-[24px] bg-[#0a0a0a] overflow-hidden shadow-lg border-b-[6px] border-b-black">
                   {studentRank && studentRank <= 3 && report.finalScore > 0 && (
                     <div className="absolute top-0 right-0 bg-transparent z-10">
-                      <div className="relative border-b-[1.5px] border-l-[1.5px] border-white/20 bg-[#1a1a1a] px-4 py-2 rounded-bl-[16px] rounded-tr-[24px] flex flex-col items-center justify-center">
-                        <p className="font-bold text-[8px] tracking-widest leading-tight text-slate-300 uppercase">
+                      <div className="relative border-b-[1.5px] border-l-[1.5px] border-orange-500 bg-white px-4 py-2 rounded-bl-[16px] rounded-tr-[24px] flex flex-col items-center justify-center shadow-md">
+                        <p className="font-bold text-[8px] tracking-widest leading-tight text-black uppercase">
                           Peringkat
                         </p>
-                        <p className="font-black text-[12px] tracking-widest leading-tight text-white uppercase mt-0.5">
+                        <p className="font-black text-[12px] tracking-widest leading-tight text-black uppercase mt-0.5">
                           TOP {studentRank}
                         </p>
                       </div>
@@ -198,6 +198,14 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                   )}
 
                   <div className="p-5 relative z-10">
+                    <div className="mb-4 pr-24">
+                      <h2 className="text-[19px] font-black uppercase text-white leading-tight truncate">
+                        {student.name}
+                      </h2>
+                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
+                        {student.className}
+                      </p>
+                    </div>
                     <div className="flex gap-4">
                       {/* Photo */}
                       <div className="w-[105px] h-[140px] shrink-0 bg-gradient-to-b from-slate-200 to-[#5a5a5a] rounded-[16px] border border-white/20 relative overflow-hidden shadow-inner">
@@ -220,68 +228,51 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                       </div>
 
                       {/* Name & Grid */}
-                      <div className="flex-1 flex flex-col min-w-0 pr-12">
-                        <div className="pt-1">
-                          <h2 className="text-[19px] font-black uppercase text-white leading-none truncate">
-                            {student.name}
-                          </h2>
-                          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">
-                            {student.className}
-                          </p>
-                        </div>
-
+                      <div className="flex-1 flex flex-col min-w-0">
                         {/* Grid Info */}
-                        <div className="grid grid-cols-2 gap-y-2 gap-x-2 mt-auto pb-1">
-                          <div className="flex items-center gap-2 border border-white/20 rounded-full bg-white/5 p-1.5">
-                            <div className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/10 text-slate-300">
-                              <IdCard className="h-3 w-3" />
-                            </div>
-                            <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
-                                NIS
+                        <div className="flex flex-col gap-y-1.5 mt-auto pb-1">
+                          <div className="flex items-center gap-1.5">
+                            <IdCard className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                            <div className="min-w-0 flex items-baseline gap-1">
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                NIS:
                               </p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                              <p className="font-bold text-slate-200 text-[10px] truncate leading-tight">
                                 {student.nis || "DRB-0000"}
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 border border-white/20 rounded-full bg-white/5 p-1.5">
-                            <div className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/10 text-slate-300">
-                              <User className="h-3 w-3" />
-                            </div>
-                            <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
-                                Usia
+                          <div className="flex items-center gap-1.5">
+                            <User className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                            <div className="min-w-0 flex items-baseline gap-1">
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                Usia:
                               </p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                              <p className="font-bold text-slate-200 text-[10px] truncate leading-tight">
                                 {student.birthDate
                                   ? `${new Date().getFullYear() - new Date(student.birthDate).getFullYear()} Tahun`
                                   : "-"}
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 border border-white/20 rounded-full bg-white/5 p-1.5">
-                            <div className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/10 text-slate-300">
-                              <LayoutGrid className="h-3 w-3" />
-                            </div>
-                            <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
-                                Kelas
+                          <div className="flex items-center gap-1.5">
+                            <LayoutGrid className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                            <div className="min-w-0 flex items-baseline gap-1">
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                Kelas:
                               </p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                              <p className="font-bold text-slate-200 text-[10px] truncate leading-tight">
                                 {student.className}
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 border border-white/20 rounded-full bg-white/5 p-1.5">
-                            <div className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/10 text-slate-300">
-                              <Calendar className="h-3 w-3" />
-                            </div>
-                            <div className="min-w-0 pr-1">
-                              <p className="text-[7px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
-                                Tahun/Semester
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                            <div className="min-w-0 flex items-baseline gap-1">
+                              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest leading-tight">
+                                Tahun:
                               </p>
-                              <p className="font-bold text-slate-200 text-[9px] truncate leading-tight mt-0.5">
+                              <p className="font-bold text-slate-200 text-[10px] truncate leading-tight">
                                 24/25 - SEM 1
                               </p>
                             </div>
@@ -376,7 +367,7 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
 
                 {/* Footer Signature */}
                 <div className="flex flex-col items-center justify-center pt-8 pb-2 relative">
-                  <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-4 text-center z-10">
+                  <div className="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-4 text-center z-10">
                     TANGGAL TERBIT:{" "}
                     {new Date().toLocaleDateString("id-ID", {
                       day: "numeric",
@@ -398,7 +389,7 @@ export function ReportView({ onBack }: { onBack?: () => void }) {
                       </span>
                     </div>
                     <div className="w-32 h-[1.5px] bg-slate-300 mb-1 z-10" />
-                    <p className="text-[9px] font-bold text-orange-500 tracking-widest uppercase z-10">
+                    <p className="text-[10px] font-bold text-orange-500 tracking-widest uppercase z-10">
                       HEAD COACH
                     </p>
                     <p className="font-bold text-slate-800 text-[11px] mt-0.5 z-10">
@@ -419,7 +410,7 @@ function AttCard({ label, value, color }: { label: string; value: number; color:
   return (
     <div className="rounded-[16px] border-[2px] border-slate-900 bg-white py-3 flex flex-col items-center justify-center text-center shadow-sm">
       <p className="text-[34px] font-black leading-none text-slate-900 mt-1">{value}</p>
-      <p className={cn("mt-2 text-[9px] font-black uppercase tracking-widest", color)}>{label}</p>
+      <p className={cn("mt-2 text-[10px] font-black uppercase tracking-widest", color)}>{label}</p>
     </div>
   );
 }

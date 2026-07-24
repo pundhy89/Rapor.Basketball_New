@@ -1,4 +1,9 @@
 import { useEffect, useState, useRef } from "react";
+import { audioManager } from "@/lib/audio-manager";
+import { useSyncExternalStore } from "react";
+import { Music, Volume2, Trash2, Upload, Plus } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+
 import { getGasUrl, pullFromGas, setGasUrl } from "@/lib/academy-store";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -69,6 +74,39 @@ export function SettingsView({ onBack }: { onBack?: () => void }) {
   const [url, setUrl] = useState("");
   useEffect(() => setUrl(getGasUrl()), []);
 
+  const bgmEnabled = useSyncExternalStore(
+    (l) => audioManager.subscribe(l),
+    () => audioManager.getBgmEnabled(),
+  );
+
+  const clickEnabled = useSyncExternalStore(
+    (l) => audioManager.subscribe(l),
+    () => audioManager.getClickEnabled(),
+  );
+
+  const bgmFiles = useSyncExternalStore(
+    (l) => audioManager.subscribe(l),
+    () => audioManager.getBgmFiles(),
+  );
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (file.type.startsWith("audio/")) {
+        const buffer = await file.arrayBuffer();
+        await audioManager.addBgmFile(file.name, buffer);
+        toast.success(`${file.name} ditambahkan`);
+      } else {
+        toast.error(`${file.name} bukan file audio`);
+      }
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
   return (
     <div className="space-y-4">
       <header className="flex items-center gap-3">
@@ -87,6 +125,95 @@ export function SettingsView({ onBack }: { onBack?: () => void }) {
           <p className="text-xs text-muted-foreground">Konfigurasi Aplikasi</p>
         </div>
       </header>
+
+      {/* Audio Settings */}
+      <Card className="space-y-4 p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-orange-500/10 text-orange-500">
+            <Volume2 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-sm font-bold">Audio & Suara</p>
+            <p className="text-[11px] text-muted-foreground">BGM & Efek Suara</p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm font-bold">Suara Klik (UI)</Label>
+              <p className="text-[10px] text-muted-foreground">Efek suara saat tombol ditekan</p>
+            </div>
+            <Switch
+              checked={clickEnabled}
+              onCheckedChange={(v) => audioManager.setClickEnabled(v)}
+            />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm font-bold">Background Music (BGM)</Label>
+              <p className="text-[10px] text-muted-foreground">Putar musik acak</p>
+            </div>
+            <Switch checked={bgmEnabled} onCheckedChange={(v) => audioManager.setBgmEnabled(v)} />
+          </div>
+
+          <div className="pt-2 border-t border-border">
+            <div className="flex items-center justify-between mb-3">
+              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                Daftar Musik ({bgmFiles.length})
+              </Label>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 text-[10px] gap-1"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Plus className="h-3 w-3" /> Tambah
+              </Button>
+              <input
+                type="file"
+                multiple
+                accept="audio/*"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleFileUpload}
+              />
+            </div>
+
+            {bgmFiles.length === 0 ? (
+              <div className="text-center py-4 text-xs text-muted-foreground border rounded-lg border-dashed">
+                Belum ada musik
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {bgmFiles.map((file) => (
+                  <div
+                    key={file.id}
+                    className="flex items-center justify-between p-2 rounded-lg bg-secondary/50 border"
+                  >
+                    <div className="flex items-center gap-2 min-w-0 pr-2">
+                      <Music className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                      <span className="text-[11px] font-medium truncate">{file.name}</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 shrink-0 text-destructive hover:bg-destructive hover:text-white"
+                      onClick={() => {
+                        audioManager.removeBgmFile(file.id);
+                        toast.success("Musik dihapus");
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </Card>
 
       <Card className="space-y-3 p-4">
         <div className="flex items-center gap-2">
