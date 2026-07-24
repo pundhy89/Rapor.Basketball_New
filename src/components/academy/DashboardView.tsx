@@ -53,7 +53,16 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
 
   return (
     <div className="space-y-5 pt-16 relative">
-      {/* Top action buttons */}
+            {/* Top action buttons */}
+      <div className="absolute top-2 left-0 z-50">
+        <button
+          onClick={() => onGo("settings")}
+          className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card shadow-sm transition-colors hover:bg-accent"
+          aria-label="Settings"
+        >
+          <Settings className="h-5 w-5 text-foreground" />
+        </button>
+      </div>
 
       <div className="absolute top-2 right-0 z-50">
         <button
