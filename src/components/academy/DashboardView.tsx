@@ -18,6 +18,7 @@ import {
   SkipBack,
   SkipForward,
   Music,
+  Gamepad2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -115,6 +116,7 @@ export function DashboardView({ onGo }: { onGo: (t: Tab) => void }) {
         <QuickCard icon={CalendarCheck} label="Data Coach" onClick={() => onGo("coaches")} />
         <QuickCard icon={Trophy} label="Rapor" onClick={() => onGo("report")} />
         <QuickCard icon={CalendarDays} label="Jadwal" onClick={() => onGo("schedule")} />
+        <QuickCard icon={Gamepad2} label="Mini Game" onClick={() => window.open("https://www.instaplay.ai/play/398ff1e2?ref=doomguy1993", "_blank")} />
       </section>
 
       {/* Music Player widget */}
